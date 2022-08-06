@@ -31,6 +31,7 @@ app.get("/gen-auth-link", async (req, res) => {
     const url = oauth2Client.generateAuthUrl({
       access_type: "offline",
       scope: scopes,
+      prompt: "consent",
     });
     res.json(url);
   } catch (error) {
@@ -47,9 +48,11 @@ app.post("/gen-tokens", async (req, res) => {
     res.json(tokens);
   } catch (error) {
     console.log(error);
-    res.jeson(error);
+    res.json(error);
   }
 });
+
+app.use("/stripe", require("./routes/stripe"));
 
 const PORT = process.env.PORT || 5000;
 
