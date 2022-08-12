@@ -66,4 +66,17 @@ router.get("/connected-account/:id", async (req, res) => {
   }
 });
 
+// CREATE DASHBOARD LOGIN LINK
+
+router.post("/login-link/:accountId", async (req, res) => {
+  const accountId = req.params.accountId;
+  try {
+    const loginLink = await stripe.accounts.createLoginLink(accountId);
+    res.json(loginLink);
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
+
 module.exports = router;
