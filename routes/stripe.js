@@ -79,4 +79,38 @@ router.post("/login-link/:accountId", async (req, res) => {
   }
 });
 
+// List payment methods
+router.post("/payment-methods", async (req, res) => {
+  // customer is customer id
+  const { customer } = req.body;
+  // console.log("received");
+  // console.log(customer);
+
+  try {
+    const paymentMethods = await stripe.paymentMethods.list({
+      customer,
+      type: "card",
+    });
+
+    res.json(paymentMethods);
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
+
+// Detach payment method from customer
+router.post("/detach-payment-method", async (req, res) => {
+  const { paymentMethodId } = req.body;
+
+  try {
+    const removedPaymentMethod = await stripe.paymentMethods.detach(
+      paymentMethodId
+    );
+    res.json({ removedPaymentMethod, message: "removed payment method" });
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 module.exports = router;
