@@ -113,4 +113,21 @@ router.post("/detach-payment-method", async (req, res) => {
   }
 });
 
+//  Create Set Up Intent
+router.post("/setup-intent", async (req, res) => {
+  const { customerId } = req.body;
+
+  try {
+    const setupIntent = await stripe.setupIntents.create({
+      payment_method_types: ["card"],
+      customer: customerId,
+    });
+
+    // returns a client secret
+    res.json(setupIntent);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 module.exports = router;
