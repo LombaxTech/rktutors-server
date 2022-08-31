@@ -6,6 +6,23 @@ router.get("/", async (req, res) => {
   res.send("test");
 });
 
+// CREATE A STRIPE CUSTOMER
+router.post("/stripe-customer", async (req, res) => {
+  const { name, email } = req.body;
+
+  try {
+    // res.send("tyring");
+    const customer = await stripe.customers.create({
+      name,
+      email,
+    });
+    res.json(customer);
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
+
 // CREATE A CONNECTED ACCOUNT
 router.post("/connected-account", async (req, res) => {
   const { email } = req.body;
