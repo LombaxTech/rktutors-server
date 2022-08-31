@@ -130,4 +130,48 @@ router.post("/setup-intent", async (req, res) => {
   }
 });
 
+// Create payment from student to tutor
+router.post("/accept-payment", async (req, res) => {
+  const { paymentMethodId, stripeCustomerId, connectedAccountId } = req.body;
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: 1500,
+      currency: "gbp",
+      customer: stripeCustomerId,
+      payment_method: paymentMethodId,
+      off_session: true,
+      confirm: true,
+      // connect stuff
+      application_fee_amount: 300,
+      transfer_data: {
+        destination: connectedAccountId,
+      },
+    });
+
+    res.json({ success: true, paymentIntent });
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+router.post("/refund", async (req, res) => {
+  const { payment_intent } = req.body;
+
+  console.log("payment intent", payment_intent);
+
+  try {
+    const refund = await stripe.refunds.create({
+      payment_intent,
+      // amount: 1000,
+      reverse_transfer: true,
+      refund_application_fee: true,
+    });
+
+    res.json({ success: true, refund });
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 module.exports = router;
