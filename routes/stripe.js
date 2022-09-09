@@ -180,7 +180,6 @@ router.post("/refund", async (req, res) => {
   try {
     const refund = await stripe.refunds.create({
       payment_intent,
-      // amount: 1000,
       reverse_transfer: true,
       refund_application_fee: true,
     });
@@ -190,5 +189,17 @@ router.post("/refund", async (req, res) => {
     res.json(error);
   }
 });
+
+// TODO: GET PAYMENT INTENT
+// router.get("/pi/:id", async (req, res) => {
+//   let { id } = req.params;
+
+//   try {
+//     const paymentIntent = await stripe.paymentIntents.retrieve(id);
+//     res.json(paymentIntent);
+//   } catch (error) {
+//     res.json(error);
+//   }
+// });
 
 module.exports = router;
