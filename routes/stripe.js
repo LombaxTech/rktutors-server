@@ -149,18 +149,21 @@ router.post("/setup-intent", async (req, res) => {
 
 // Create payment from student to tutor
 router.post("/accept-payment", async (req, res) => {
-  const { paymentMethodId, stripeCustomerId, connectedAccountId } = req.body;
+  const { paymentMethodId, stripeCustomerId, connectedAccountId, price } =
+    req.body;
+
+  let platformFee = 300;
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1500,
+      amount: price * 100,
       currency: "gbp",
       customer: stripeCustomerId,
       payment_method: paymentMethodId,
       off_session: true,
       confirm: true,
       // connect stuff
-      application_fee_amount: 300,
+      application_fee_amount: platformFee,
       transfer_data: {
         destination: connectedAccountId,
       },
@@ -168,6 +171,7 @@ router.post("/accept-payment", async (req, res) => {
 
     res.json({ success: true, paymentIntent });
   } catch (error) {
+    console.log(error);
     res.json(error);
   }
 });
