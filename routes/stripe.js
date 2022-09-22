@@ -58,8 +58,8 @@ router.post("/onboarding/:accountId", async (req, res) => {
   try {
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: "http://localhost:3000/stripe-connect-status-check",
-      return_url: "http://localhost:3000/stripe-connect-status-check",
+      refresh_url: `${process.env.FRONTEND_URL}/stripe-connect-status-check`,
+      return_url: `${process.env.FRONTEND_URL}/stripe-connect-status-check`,
       type: "account_onboarding",
     });
 
