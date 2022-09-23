@@ -180,4 +180,28 @@ router.post("/booking-cancelled", async (req, res) => {
   }
 });
 
+router.post("/message-received", async (req, res) => {
+  let { toEmail, userName } = req.body;
+
+  const msg = {
+    from: {
+      email: "tutors@rktutors.co.uk", // Change to your recipient
+      name: "RKTutors Team",
+    },
+    to: toEmail, // Change to your verified sender
+
+    templateId: "d-4ffccec8fe5c4044ade4bd490a4f0beb",
+    dynamic_template_data: { userName },
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log("Email sent");
+    res.json({ success: true, message: "sent email" });
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
+
 module.exports = router;
