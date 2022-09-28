@@ -152,7 +152,7 @@ router.post("/accept-payment", async (req, res) => {
   const { paymentMethodId, stripeCustomerId, connectedAccountId, price } =
     req.body;
 
-  let platformFee = 300;
+  let platformFee = 200;
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
