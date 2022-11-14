@@ -204,4 +204,27 @@ router.post("/message-received", async (req, res) => {
   }
 });
 
+router.post("/portfolio-contact", async (req, res) => {
+  let { firstName, lastName, email, phone, message } = req.body;
+
+  console.log({ firstName, lastName, email, phone, message });
+
+  const msg = {
+    from: "rakibkhan@live.co.uk",
+    to: "rakibkhan@live.co.uk", // Change to your verified sender
+
+    subject: "New Portfolio Contact",
+    text: `First Name: ${firstName}, Last Name: ${lastName}, Email: ${email}, Phone: ${phone}, Message: ${message}`,
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log("Email sent");
+    res.json({ success: true, message: "sent email" });
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
+
 module.exports = router;
